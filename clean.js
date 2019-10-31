@@ -1,0 +1,47 @@
+var fs = require('fs');
+var chalk = require('chalk');
+var log = console.log;
+
+const map = {
+  f: 'file',
+  file: 'file',
+}
+
+const cmdOpts = (function() {
+  const args = process.argv.slice(2)
+  const opts = {}
+  for (let index = 0; index < args.length; index++) {
+    const opt = args[index].replace(/^-{1,2}/, '');
+    index++
+    opts[map[opt]] = args[index]
+  }
+  return opts
+})()
+
+const { file } = cmdOpts;
+const basePath = file || '.';
+fs.exists(basePath, exists => {
+  if (exists) {
+    const items = fs.readdirSync(basePath);
+    const regex = /.js$/
+    const filesNeedToDelete = items.filter(it => it.indexOf('result_') > -1 && regex.test(it));
+    if (filesNeedToDelete.length === 0) {
+      log(chalk.red('暂无需要清除的文件'));
+    } else {
+      let i = 0;
+      for (; i < filesNeedToDelete.length; i++) {
+        const file = filesNeedToDelete[i];
+        const path = `${basePath}/${file}`;
+        fs.unlink(path, err => {
+          if (err) {
+            log(chalk.red(`${file}删除失败`))
+          } else {
+            log(chalk.green(`${file}删除成功`))
+          }
+        })
+      }
+    }
+  } else {
+
+  }
+})
