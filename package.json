@@ -1,6 +1,6 @@
 {
   "name": "rigo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "keywords": [
     "translate",
     "tool"
@@ -21,7 +21,8 @@
     "commander": "^2.15.1",
     "inquirer": "0.12.0",
     "io-spin": "^0.4.1",
-    "shelljs": "^0.8.0"
+    "shelljs": "^0.8.0",
+    "prettier": "^1.18.2"
   },
   "author": "risatoar@163.com",
   "license": "ISC",

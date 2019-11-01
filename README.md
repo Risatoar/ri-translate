@@ -40,13 +40,13 @@ rigo -f /Users/risatoar/project/strings.js -o /Users/risatoar/project/result
 ```
 
 command: 
-rigo -f => Documents that need to be translated 
-rigo -o => The location to which the translated file needs to be exported
-riclean -f => delete file
+* rigo -f => Documents that need to be translated 
+* rigo -o => The location to which the translated file needs to be exported
+* riclean -f => delete file
 
 ## Todo
 
-At present, only absolute position of files is supported. Relative position
+At present, only relative of files is supported. absolute position
 support will be added as soon as possible。
 
 Currently, only Chinese to English is supported. Other languages will be added

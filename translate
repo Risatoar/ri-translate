@@ -4,6 +4,8 @@ var http = require('http')
 var fs = require('fs')
 var inquirer = require('inquirer')
 var log = require('./utils')
+const prettier = require('prettier')
+const prettierConfig = require('./prettier.config')
 let language = 'en'
 
 const map = {
@@ -28,7 +30,7 @@ const { file, output } = cmdOpts;
 const { successLog, errLog, tipLog } = log
 const fanyiUrl =
   'http://fanyi.youdao.com/openapi.do?keyfrom=node-translator&key=2058911035&type=data&doctype=json&version=1.1&q='
-const languageCanbeTranslateTo = ['zh']
+const languageCanbeTranslateTo = ['en']
 
 const chooseLanguage = () => {
   inquirer.prompt(
@@ -60,10 +62,11 @@ const translate = async () => {
     ret[language][keys[i]] = val
   }
   successLog('\n翻译完成')
-  fs.exists('./result', exists => {
+  const outputFile = output || __dirname;
+  fs.exists(`${outputFile}/result`, exists => {
     if (exists) {
       const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
-      const filePath = `${output || '.'}/result_(${date}).js`
+      const filePath = `${outputFile}/result/result_(${date}).js`
       exportResult({ ret, startTime, filePath })
     } else {
     }
@@ -74,12 +77,16 @@ const exportResult = ({ ret, startTime, filePath }) => {
   try {
     fs.writeFileSync(
       filePath,
-      JSON.stringify(ret, null, '\t')
+      prettier.format(`module.export = {
+        en: ${JSON.stringify(ret.en)},
+        zh: ${JSON.stringify(ret.zh)}
+      }`, prettierConfig)
     )
     const endTime = new Date().getTime()
     const elapsedTime = (endTime - startTime) / 1000
     successLog(`导出成功!总共消耗时间${elapsedTime}s`)
   } catch (error) {
+    console.log(error, 'err')
     errLog('导出失败')
   }
 }
