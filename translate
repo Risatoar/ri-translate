@@ -73,22 +73,16 @@ const translate = async () => {
     const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
     const filePath = `${outputFile}/result_(${date}).js`
     exportResult({ ret, startTime, filePath })
-    // fs.exists(`${outputFile}`, exists => {
-    //   if (exists) {
-    //     output();
-    //   } else {
-    //   }
-    // })
   } catch (error) {
     console.log(error)
   }
 }
 
-const exportResult = ({ ret, startTime, filePath }) => {
+const exportResult = ({ ret, startTime }) => {
   try {
     fs.writeFileSync(
-      filePath,
-      prettier.format(`module.export = {
+      file,
+      prettier.format(`module.exports = {
         en: ${JSON.stringify(ret.en)},
         zh: ${JSON.stringify(ret.zh)}
       }`, prettierConfig)

@@ -1,6 +1,6 @@
 {
   "name": "rigo",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "keywords": [
     "translate",
     "tool"
@@ -16,8 +16,7 @@
   },
   "main": "index.js",
   "bin": {
-    "rigo": "translate",
-    "riclean": "clean"
+    "rigo": "translate"
   },
   "repository": {
     "type": "git",
