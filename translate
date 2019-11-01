@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var http = require('http')
 var fs = require('fs')
+var path = require('path');
 var inquirer = require('inquirer')
 var log = require('./utils')
 const prettier = require('prettier')
@@ -25,7 +26,8 @@ const cmdOpts = (function() {
   return opts
 })()
 
-const { file, output } = cmdOpts;
+const { file: inputFile, output } = cmdOpts;
+const file = path.join(process.cwd(), inputFile)
 const { successLog, errLog, tipLog } = log
 const fanyiUrl =
   'http://fanyi.youdao.com/openapi.do?keyfrom=node-translator&key=2058911035&type=data&doctype=json&version=1.1&q='
@@ -59,7 +61,7 @@ const translate = async () => {
     const ret = { zh: strings.zh, en: {} }
     const startTime = new Date().getTime()
     const zh = strings.zh
-    const keys = Reflect.ownKeys(zh)
+    const keys = Object.keys(zh)
     const len = keys.length
     let i = 0
     for (; i < len; i++) {
@@ -67,15 +69,16 @@ const translate = async () => {
       ret[language][keys[i]] = val
     }
     successLog('\n翻译完成')
-    const outputFile = output || __dirname;
-    fs.exists(`${outputFile}`, exists => {
-      if (exists) {
-        const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
-        const filePath = `${outputFile}/result_(${date}).js`
-        exportResult({ ret, startTime, filePath })
-      } else {
-      }
-    })
+    const outputFile = output || process.cwd();
+    const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
+    const filePath = `${outputFile}/result_(${date}).js`
+    exportResult({ ret, startTime, filePath })
+    // fs.exists(`${outputFile}`, exists => {
+    //   if (exists) {
+    //     output();
+    //   } else {
+    //   }
+    // })
   } catch (error) {
     console.log(error)
   }
