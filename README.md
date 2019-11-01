@@ -39,8 +39,10 @@ next
 rigo -f /Users/risatoar/project/strings.js -o /Users/risatoar/project/result
 ```
 
-command: rigo -f => Documents that need to be translated rigo -o => The location
-to which the translated file needs to be exported
+command: 
+rigo -f => Documents that need to be translated 
+rigo -o => The location to which the translated file needs to be exported
+riclean -f => delete file
 
 ## Todo
 
