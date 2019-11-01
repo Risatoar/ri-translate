@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 var http = require('http')
 var fs = require('fs')
 var inquirer = require('inquirer')
@@ -50,27 +49,36 @@ const chooseLanguage = () => {
 }
 
 const translate = async () => {
-  const strings = require(file)
-  const ret = { zh: strings.zh, en: {} }
-  const startTime = new Date().getTime()
-  const zh = strings.zh
-  const keys = Reflect.ownKeys(zh)
-  const len = keys.length
-  let i = 0
-  for (; i < len; i++) {
-    const val = await fetchTranslateData(ret.zh[keys[i]])
-    ret[language][keys[i]] = val
-  }
-  successLog('\n翻译完成')
-  const outputFile = output || __dirname;
-  fs.exists(`${outputFile}/result`, exists => {
-    if (exists) {
-      const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
-      const filePath = `${outputFile}/result/result_(${date}).js`
-      exportResult({ ret, startTime, filePath })
-    } else {
+  try {
+    const targetFile = fs.readFileSync(file).toString();
+    if (targetFile.startsWith('export')) {
+      errLog('翻译失败, 目前暂不支持import')
+      return;
     }
-  })
+    const strings = require(file)
+    const ret = { zh: strings.zh, en: {} }
+    const startTime = new Date().getTime()
+    const zh = strings.zh
+    const keys = Reflect.ownKeys(zh)
+    const len = keys.length
+    let i = 0
+    for (; i < len; i++) {
+      const val = await fetchTranslateData(ret.zh[keys[i]])
+      ret[language][keys[i]] = val
+    }
+    successLog('\n翻译完成')
+    const outputFile = output || __dirname;
+    fs.exists(`${outputFile}`, exists => {
+      if (exists) {
+        const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
+        const filePath = `${outputFile}/result_(${date}).js`
+        exportResult({ ret, startTime, filePath })
+      } else {
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const exportResult = ({ ret, startTime, filePath }) => {
