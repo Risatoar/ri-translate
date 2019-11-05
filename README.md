@@ -36,8 +36,10 @@ module.exports = {
 next
 
 ```bash
-rigo -f /Users/risatoar/project/strings.js -o /Users/risatoar/project/result
+rigo -f ./strings.js
 ```
+
+We will replace the source file with the translated file
 
 command:
 
